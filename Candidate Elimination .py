@@ -3,7 +3,6 @@
 
 # In[10]:
 
-
 data = [
     ["Sunny", "Warm", "Normal", "Strong", "Warm", "Same", "yes"],
     ["Sunny", "Warm", "High", "Strong", "Warm", "Same", "yes"],
