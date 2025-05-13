@@ -1,0 +1,43 @@
+# Sample Dataset: [Sky, Temp, Humidity, Wind, Water, Forecast, PlayTennis]
+data = [
+    ["Sunny", "Warm", "Normal", "Strong", "Warm", "Same", "yes"],
+    ["Sunny", "Warm", "High", "Strong", "Warm", "Same", "yes"],
+    ["Rainy", "Cold", "High", "Strong", "Warm", "Change", "no"],
+    ["Sunny", "Warm", "High", "Strong", "Cool", "Change", "yes"]
+]
+def candidate_elimination(data):
+    S = ["Ø"] * (len(data[0]) - 1)  # Most specific hypothesis (start with empty)
+    G = [["?"] * (len(data[0]) - 1)]  # Most general hypothesis (all '?')
+
+    for row in data:
+        attributes, label = row[:-1], row[-1]  # Split attributes and class label
+
+        if label == "yes":  # Positive example → Generalize S
+            for i in range(len(S)):
+                if S[i] == "Ø":  
+                    S[i] = attributes[i]
+                elif S[i] != attributes[i]:
+                    S[i] = "?"
+
+            # Remove hypotheses in G that contradict S
+            G = [g for g in G if all(g[i] == "?" or g[i] == S[i] for i in range(len(S)))]
+
+        elif label == "no":  # Negative example → Specialize G
+            new_G = []
+            for g in G:
+                for i in range(len(g)):
+                    if g[i] == "?":
+                        new_hypothesis = g[:]
+                        new_hypothesis[i] = attributes[i]
+                        new_G.append(new_hypothesis)
+            G = new_G
+
+    return S, G
+
+
+# Run Candidate Elimination
+S_final, G_final = candidate_elimination(data)
+
+# Print Results
+print("Final Specific Hypothesis:", S_final)
+print("Final General Hypothesis:", G_final)
